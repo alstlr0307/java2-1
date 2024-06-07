@@ -1,5 +1,663 @@
 # 김민식 학번 202130104
 
+# 6월 07일 강의
+
+## 스윙 컴포넌트 그리기: `paintComponent()`
+
+```java
+public void paintComponent(Graphics g)
+```
+## 스윙의 페인팅 기본
+- 모든 컴포넌트는 자신의 모양을 스스로 그린다.
+- 컨테이너는 자신을 그린 후 그 위에 자식 컴포넌트들에게 그리기 지시를 한다.
+- 모든 스윙 컴포넌트는 자신의 모양을 그리는 `paintComponent()` 메소드를 보유하고 있다.
+
+## `paintComponent()` 메소드
+- 스윙 컴포넌트가 자신의 모양을 그리는 메소드이다.
+- Component의 메소드로 스윙 컴포넌트가 이 메소드를 오버라이딩한다.
+
+### 언제 호출되는가?
+- 컴포넌트가 `그려져야 하는 시점마다` 호출된다.
+  - 크기가 변경되거나 위치가 변경되거나, 컴포넌트가 가려졌던 것이 사라지는 등
+
+### 매개변수인 `Graphics` 객체
+- 그래픽 컨텍스트: 컴포넌트 그리기에 필요한 도구를 제공하는 객체이다.
+- 자바 플랫폼에 의해 공급된다.
+
+### 주요 기능
+- 색상 설정
+- 도형 그리기
+- 이미지 그리기 등의 메소드 제공
+
+## paintComponent()의 오버라이딩과 JPanel
+
+### paintComponent(Graphics g)의 오버라이딩
+
+- `paintComponent(Graphics g)` 메서드는 그래픽 컨텍스트를 이용하여 컴포넌트를 그릴 때 사용되는 메서드입니다.
+- 개발자가 `JComponent`를 상속받아 새로운 컴포넌트를 설계할 때 주로 사용됩니다.
+- 기존 컴포넌트의 모양을 변화시키거나, 새로운 모양을 만들고자 할 때 유용하게 활용됩니다.
+- 예시 코드:
+  ```java
+  class MComponent extends JComponent {
+      @Override
+      public void paintComponent(Graphics g) {
+          super.paintComponent(g);
+          // 필요한 그리기 코드 작성
+      }
+  }
+
+## JPanel
+- JPanel은 비어 있는 컨테이너로, 다양한 GUI를 구성할 수 있는 캔버스로 활용됩니다. 개발자가 임의의 모양을 가지는 패널을 만들기 위해 JPanel을 상속받아 사용됩니다. JPanel을 이용하면 다양한 구성요소들을 자유롭게 배치하고 사용할 수 있습니다.
+
+## 예제 11-1: JPanel을 상속받은 패널에 도형 그리기
+
+- JPanel을 상속받아 패널을 구성하고, 이곳에 그림과 같은 3개의 도형을 그리는 예제입니다.
+
+### 코드 예제
+
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class PaintJPanelEx extends JFrame {
+    public PaintJPanelEx() {
+        setTitle("Panel paintComponent");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(new MyPanel());
+        setSize(250, 200);
+        setVisible(true);
+    }
+
+    // JPanel을 상속받는 새 패널 구현
+    class MyPanel extends JPanel {
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(Color.BLUE); // 파란색 선택
+            g.drawRect(10, 10, 50, 50);
+            g.drawRect(50, 50, 50, 50);
+            g.setColor(Color.MAGENTA); // 마젠타색 선택
+            g.drawRect(90, 90, 50, 50);
+        }
+    }
+
+    public static void main(String[] args) {
+        new PaintJPanelEx();
+    }
+}
+```
+
+### PaintJPanelEx 클래스 설명
+
+- `PaintJPanelEx` 클래스는 `JFrame`을 상속받아 GUI 창을 생성합니다.
+- 생성자에서는 제목을 설정하고, 기본 닫기 동작을 정의하며, 커스텀 패널인 `MyPanel`을 컨텐트 패널로 설정합니다.
+
+### MyPanel 클래스 설명
+
+- `MyPanel` 클래스는 `JPanel`을 상속받아 새 패널을 구현합니다.
+- `paintComponent` 메서드를 오버라이드하여 도형을 그립니다.
+  - `super.paintComponent(g)`를 호출하여 패널을 초기화합니다.
+  - `g.setColor(Color.BLUE)`로 파란색을 선택하고, `g.drawRect(10, 10, 50, 50)`와 `g.drawRect(50, 50, 50, 50)`로 두 개의 파란색 사각형을 그립니다.
+  - `g.setColor(Color.MAGENTA)`로 마젠타색을 선택하고, `g.drawRect(90, 90, 50, 50)`로 마젠타색 사각형을 그립니다.
+
+## main 메서드 설명
+
+- `main` 메서드에서는 `PaintJPanelEx` 인스턴스를 생성하여 프로그램을 시작합니다.
+
+## 그래픽 기반 GUI 프로그래밍
+
+### 그래픽 기반 GUI 프로그래밍이란?
+
+`그래픽 기반 GUI 프로그래밍은 스윙 컴포넌트에 의존하지 않고 선, 원, 이미지 등을 이용하여 직접 화면을 구성하는 방법을 말합니다.`
+
+### 그래픽 기반 GUI 프로그래밍의 필요성
+
+- 컴포넌트의 한계를 극복하고 차트, 게임 등의 자유로운 콘텐츠를 표현할 수 있습니다.
+- 그래픽은 컴포넌트에 비해 화면 출력 속도가 빠르므로, 성능이 중요한 애플리케이션에서 유용합니다.
+- 스윙 컴포넌트들은 모두 그래픽으로 작성되어 있기 때문에, 그래픽에 대한 학습은 GUI의 기반 기술을 이해하는데 도움이 됩니다.
+- 그래픽을 이용하여 개발자 자신만의 컴포넌트를 개발할 수 있습니다.
+
+## Graphics와 문자열 출력
+
+### Graphics의 기능
+
+- `색상 선택하기`
+- `문자열 그리기`
+- `도형 그리기`
+- `도형 칠하기`
+- `이미지 그리기`
+- `클리핑`
+
+### 문자열 출력을 위한 Graphics 메소드
+
+```java
+void drawString(String str, int x, int y)
+```
+- *str 문자열을 (x, y) 위치에 그립니다. 현재 Graphics 설정된 색과 폰트로 문자열이 출력됩니다.*
+
+```java
+Graphics g;
+g.drawString("자바는 재밌다", 30, 30); // (30, 30) 위치에 문자열 출력
+```
+
+### 그래픽의 색과 폰트
+
+- 색: `Color` 클래스를 사용합니다. 자바의 색은 (Red, Green, Blue) 성분으로 구성되며, 각 성분은 0에서 255(8비트) 사이의 정수값입니다. 예를 들어, 빨간색은 `new Color(255, 0, 0)`으로 표현됩니다.
+
+- 폰트: `Font` 클래스를 사용합니다. `Font(String fontFace, int style, int size)` 생성자를 사용하여 폰트를 설정합니다. `fontFace`는 폰트 이름, `style`은 폰트 스타일 (BOLD, ITALIC, PLAIN 중 하나), `size`는 폰트 크기 (픽셀 단위)를 나타냅니다.
+
+```java
+raphics에 색과 폰트 설정
+void setColor(Color color)
+```
+- 그래픽의 색을 설정합니다. 이 색은 그릴 때 사용됩니다.
+
+```java
+void setFont(Font font)
+```
+- 그래픽에 사용할 폰트를 설정합니다.
+
+예시:
+```java
+Graphics g;
+Font f = new Font("Arial", Font.ITALIC, 30);
+g.setFont(f);
+g.setColor(Color.RED);
+g.drawString("How much", 30, 30);
+```
+- 위 예시에서는 "How much"라는 문자열을 "Arial" 폰트의 빨간색으로 (30, 30) 위치에 출력합니다.
+
+## 도형 그리기와 칠하기
+
+### < 도형 그리기 >
+
+### 선, 타원, 사각형, 둥근 모서리 사각형, 원호, 다각형 그리기
+
+- **선(Line) 그리기:** `drawLine(int x1, int y1, int x2, int y2)` 메서드를 사용하여 (x1, y1)에서 (x2, y2)까지 선을 그립니다.
+
+- **타원(Oval) 그리기:** `drawOval(int x, int y, int width, int height)` 메서드를 사용하여 (x, y)를 왼쪽 상단 모서리로 하는 타원을 그립니다.
+
+- **사각형(Rectangle) 그리기:** `drawRect(int x, int y, int width, int height)` 메서드를 사용하여 (x, y)를 왼쪽 상단 모서리로 하는 사각형을 그립니다.
+
+- **둥근 모서리 사각형(Round Rectangle) 그리기:** `drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)` 메서드를 사용하여 (x, y)를 왼쪽 상단 모서리로 하는, 너비가 width이고 높이가 height인 사각형의 모서리를 둥글게 그립니다. `arcWidth`와 `arcHeight`는 모서리 원의 수평 반지름과 수직 반지름입니다.
+
+- **원호(Arc) 그리기:** `drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)` 메서드를 사용하여 (x, y)를 시작점으로 하는 원호를 그립니다. startAngle은 시작 각도이고, arcAngle은 호의 각도입니다.
+
+- **다각형(Polygon) 그리기:** `drawPolygon(int[] xPoints, int[] yPoints, int nPoints)` 메서드를 사용하여 주어진 점(xPoints, yPoints)들을 연결하여 다각형을 그립니다.
+
+## 도형 칠하기
+
+도형을 그린 후 내부를 채우는 기능입니다. 그리기 메서드 명에서 `draw` 대신 `fill`을 사용하여 내부를 채울 수 있습니다. 예를 들어, `drawRect()` 대신 `fillRect()`를 사용하여 사각형 내부를 채울 수 있습니다.
+
+## Graphics의 원호와 폐다각형 그리기 메소드
+
+### 원호(Arc) 그리기
+
+```java
+void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)
+```
+
+#### 원호의 시작 각도
+
+- **startAngle**: 원호의 시작 각도입니다. 3시 방향이 0도의 기준점입니다.
+
+#### 원호의 각도
+
+- **arcAngle**: 원호의 각도입니다.
+
+#### (x, y)에서 width와 height 크기의 사각형에 내접하는 원호 그리기
+
+- 원본을 유지하면서, startAngle 지점에서 arcAngle 각도만큼 원호를 그립니다. arcAngle이 양수이면 반시계 방향으로, 음수이면 시계 방향으로 그립니다.
+
+### 폐다각형(직선으로 이루어진 다각형) 그리기
+```java
+void drawPolygon(int[] xPoints, int[] yPoints, int n)
+```
+- xPoints, yPoints 배열에 저장된 점들 중 n개를 연결하는 폐다각형을 그립니다.
+
+- (xPoints[0], yPoints[0]), (xPoints[1], yPoints[1]), ..., (xPoints[n-1], yPoints[n-1]), (xPoints[0], yPoints[0])의 점들을 순서대로 연결합니다.
+
+예제:
+```java
+class MyPanel extends JPanel ( public void paintComponent/Graphics g) ( super paintComponent(g): g setColor Color RED g.drawArc(20,100,80,80,90,270)
+class MyPanel extends JPanel ( public void paintComponent(Graphics g) ( super paintComponent(g); g.setColor(Color.RED);
+int x= (80,40,80,120); int ly (40,120,200,120); g.drawPolygon(x, y, 4);
+```
+
+## 스윙에서 이미지를 그리는 2가지 방법
+
+1. **JLabel을 이용한 이미지 그리기**
+    - 이미지를 JLabel을 통해 그립니다.
+    ```java
+    ImageIcon image = new ImageIcon("images/apple.jpg");
+    JLabel label = new JLabel(image);
+    panel.add(label);
+    ```
+    - **장점**: 이미지 그리기가 간편합니다.
+    - **단점**: 이미지의 원본 크기대로 그려지므로 이미지 크기를 조절할 수 없습니다.
+
+2. **Graphics의 drawImage()로 이미지 출력**
+    - 이미지의 일부분을 그릴 수 있고, 원본 크기와 다르게 그릴 수 있습니다.
+    - **장점**: 이미지의 일부분 등 이미지의 크기와 위치를 조절할 수 있습니다.
+    - **단점**: 컴포넌트로 관리할 수 없으며, 이미지의 위치나 크기를 적절히 조절하는 코딩이 필요합니다.
+
+### 이미지 그리기 샘플 코드
+
+#### 이미지 로딩
+```java
+ImageIcon icon = new ImageIcon("image/image0.jpg");
+Image img = icon.getImage();
+
+// (20, 20) 위치에 원본 크기로 그리기 (고정 크기임)
+public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.drawImage(img, 20, 20, this);
+}
+
+// (20, 20) 위치에 100x100 크기로 그리기 (고정 크기임)
+public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.drawImage(img, 20, 20, 100, 100, this);
+}
+
+// 이미지를 패널에 꽉 차도록 그리기 (가변 크기임)
+public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.drawImage(img, 20, 20, 100, 100, this);
+}
+
+// JPanel의 크기로 그리기 (가변 크기임)
+public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+}
+```
+
+## repaint()
+
+- **설명**: 자바의 모든 컴포넌트가 가지고 있는 메소드로, 자바 플랫폼에게 컴포넌트를 강제로 그리도록 지시합니다.
+- `repaint()`가 호출되면, 자바 플랫폼은 컴포넌트의 `paintComponent()` 메소드를 호출합니다.
+
+### `repaint()`를 호출해야 하는 경우:
+
+1. 개발자가 컴포넌트를 다시 그리고자 할 때:
+   - 프로그램에서 컴포넌트의 모양과 위치를 변경하고 즉시 화면에 반영해야 하는 상황에서 사용합니다.
+   - 컴포넌트가 변경된 위치에 변경된 모양으로 즉시 다시 그려져야 할 때 사용됩니다.
+   - `repaint()`는 자바 플랫폼에게 즉시 컴포넌트를 다시 그리도록 지시합니다.
+
+### 최적의 사용 방법:
+
+- 부모 컴포넌트부터 다시 그리는 것이 좋습니다.
+- `component.repaint()`가 호출될 때:
+  - 컴포넌트는 새로운 위치에 다시 그려지지만, 이전 모양은 이전 위치에 그대로 남아 있습니다.
+
+### 부모 컴포넌트에서 `repaint()`를 호출하는 경우:
+
+- 부모 컴포넌트에서 `repaint()`가 호출되면:
+  - 부모 컨테이너의 모든 내용이 지워지고, 자식 컴포넌트들이 다시 그려집니다.
+  - 결과적으로 컴포넌트의 이전 모양이 지워지고, 변경된 크기나 위치에 새롭게 다시 그려집니다.
+
+예시:
+```java
+component.getParent().repaint();
+```
+### 코드예제
+```java
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class GraphicsDrawOvalMouseEx extends JFrame {
+
+    public GraphicsDrawOvalMouseEx() {
+        setTitle("마우스 드래깅으로 타원 그리기 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(new MyPanel());
+        setSize(300, 300);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new GraphicsDrawOvalMouseEx();
+    }
+    
+    // 타원을 그릴 패널 작성. 이 패널에 마우스 리스너 구현
+    class MyPanel extends JPanel {
+        private Point start = null, end = null;
+
+        public MyPanel() {
+            MyMouseListener listener = new MyMouseListener();
+            // listener를 아래 두 리스너로 공통으로 등록해야 한다.
+            addMouseListener(listener);
+            addMouseMotionListener(listener);
+        }
+
+        class MyMouseListener extends MouseAdapter {
+            public void mousePressed(MouseEvent e) {
+                start = e.getPoint();
+            }
+
+            public void mouseDragged(MouseEvent e) {
+                end = e.getPoint();
+                repaint(); // 패널의 그리기 요청 주목
+            }
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (start == null)
+                return;
+            g.setColor(Color.BLUE);
+            int x = Math.min(start.x, end.x);
+            int y = Math.min(start.y, end.y);
+            int width = Math.abs(start.x - end.x);
+            int height = Math.abs(start.y - end.y);
+            g.drawOval(x, y, width, height);
+        }
+    }
+}
+
+```
+### 코드예제 2
+```java
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+import java.awt.event.*;
+
+public class GraphicsDrawLineMouseEx extends JFrame {
+
+    public GraphicsDrawLineMouseEx() {
+        setTitle("마우스로 여러 개의 선 그리기 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(new MyPanel());
+        setSize(300, 300);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new GraphicsDrawLineMouseEx();
+    }
+
+    class MyPanel extends JPanel {
+        private Vector<Point> vStart = new Vector<Point>();
+        private Vector<Point> vEnd = new Vector<Point>();
+
+        public MyPanel() {
+            MyMouseListener listener = new MyMouseListener();
+            addMouseListener(listener);
+            addMouseMotionListener(listener);
+        }
+
+        class MyMouseListener extends MouseAdapter {
+            public void mousePressed(MouseEvent e) {
+                vStart.add(e.getPoint());
+                vEnd.add(e.getPoint());
+                repaint();
+            }
+
+            public void mouseDragged(MouseEvent e) {
+                int lastIndex = vEnd.size() - 1;
+                vEnd.set(lastIndex, e.getPoint());
+                repaint();
+            }
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(Color.BLACK);
+            for (int i = 0; i < vStart.size(); i++) {
+                Point start = vStart.get(i);
+                Point end = vEnd.get(i);
+                g.drawLine(start.x, start.y, end.x, end.y);
+            }
+        }
+    }
+}
+```
+
+### 멀티태스킹 ( multi-tasking ) 개념
+- 멀티태스킹
+    - 여러 개의 작업(태스크)이 동시에 처리되는 것
+
+![예시 이미지](images/123.webp)
+
+![멀티태스킹 프로그램 사례](images/멀티테스킹.webp)
+
+## 스레드와 운영체제
+
+## 스레드(thread)
+- 운영체제에 의해 관리되는 하나의 작업 혹은 태스크
+- 스레드와 태스크(혹은 작업)은 바꾸어 사용해도 무관
+
+## 멀티스레딩(multi-threading)
+- 여러 스레드를 동시에 실행시키는 응용프로그램을 작성하는 기법
+
+### 스레드 구성
+- 스레드 코드
+  - 작업을 실행하기 위해 작성한 프로그램 코드
+  - 개발자가 작성
+- 스레드 정보
+  - 스레드 명, 스레드 ID, 스레드의 실행 소요 시간, 스레드의 우선 순위 등
+  - 운영체제가 스레드에 대해 관리하는 정보
+
+## 멀티태스킹과 멀티스레딩
+
+![예시 이미지](images/스레드.webp)
+
+### 멀티태스킹 구현 기술
+- 멀티프로세싱(multi-processing)
+  - 하나의 응용프로그램이 여러 개의 프로세스를 생성하고, 각 프로세스가 하나의 작업을 처리하는 기법
+  - 각 프로세스 독립된 메모리 영역을 보유하고 실행
+  - 프로세스 사이의 문맥 교환에 따른 과도한 오버헤드와 시간 소모의 문제점
+- 멀티스레딩(multi-threading)
+  - 하나의 응용프로그램이 여러 개의 스레드를 생성하고, 각 스레드가 하나의 작업을 처리하는 기법
+  - 하나의 응용프로그램에 속한 스레드는 변수 메모리, 파일 오픈 테이블 등 자원으로 공유하므로, 문맥 교환에 따른 오버헤드가 매우 작음
+  - 현재 대부분의 운영체제가 멀티스레딩을 기본으로 함
+
+## 자바 스레드(Thread)와 JVM
+
+### 자바 스레드
+- 자바 가상 기계(JVM)에 의해 스케쥴되는 실행 단위의 코드 블럭
+- 스레드의 생명 주기는 JVM에 의해 관리됨: JVM은 스레드 단위로 스케쥴링
+
+### JVM과 자바의 멀티스레딩
+- 하나의 JVM은 하나의 자바 응용프로그램만 실행
+- 자바 응용프로그램이 시작될 때 JVM이 함께 실행됨
+  - 자바 응용프로그램이 종료하면 JVM도 함께 종료함
+- 응용프로그램은 하나 이상의 스레드로 구성 가능
+
+##Thread 클래스를 상속받아 스레드 만들기
+
+## Thread 클래스를 상속받아 스레드 만들기
+- Thread 클래스 상속
+- run() 메소드 오버라이딩
+  - run() 메소드는 스레드 코드를 포함
+  - run() 메소드에서 스레드 실행 시작
+
+## 스레드 객체 생성 및 시작
+- 스레드 객체 생성
+  - Thread 클래스의 생성자 이용
+- 스레드 시작
+  - start() 메소드 호출
+    - JVM에 의해 스케쥴되기 시작
+
+## Thread 클래스의 주요 메소드
+- `Thread()`
+  - 스레드 객체 생성
+- `Thread(Runnable target)`
+  - Runnable 객체를 이용하여 스레드 객체 생성
+- `Thread(String name)`
+  - 이름이 있는 스레드 객체 생성
+- `void run()`
+  - 스레드 코드 작성을 위한 메소드
+- `void start()`
+  - JVM에게 스레드 실행 시작 요청
+- `void interrupt()`
+  - 스레드 강제 종료
+- `static void yield()`
+  - 다른 스레드에게 실행 양보
+- `void join()`
+  - 스레드가 종료할 때까지 대기
+- `long getId()`
+  - 스레드의 ID값 반환
+- `String getName()`
+  - 스레드의 이름 반환
+- `int getPriority()`
+  - 스레드의 우선순위 값 반환
+- `void setPriority(int priority)`
+  - 스레드의 우선순위 값을 변경
+- `Thread.State getState()`
+  - 스레드의 상태 값 반환
+- `static void sleep(long millis)`
+  - 스레드를 지정한 시간만큼 재우기
+- `static Thread currentThread()`
+  - 현재 실행 중인 스레드 객체의 레퍼런스 반환
+
+### 예제 코드
+- Thread를 상속받아 1초 단위로 초 시간을 출력하는
+TimerThread 스레드 작성 사례
+
+```java
+// TimerThread 클래스 선언
+class TimerThread extends Thread {
+    // 타이머 값이 출력되는 레이블
+    private Label timerLabel;
+
+    // 생성자
+    public TimerThread(Label timerLabel) {
+        this.timerLabel = timerLabel;
+    }
+
+    // 스레드 코드 run()이 종료하면 스레드 종료
+    @Override
+    public void run() {
+        // 타이머 카운트 값
+        int n = 0;
+
+        while (true) {
+            // 타이머 값을 레이블에 설정
+            timerLabel.setText(Integer.toString(n));
+            n++; // 카운트 증가
+            try {
+                Thread.sleep(1000); // 1초 동안 잠을 잔 후 실행
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+}
+```
+
+### 예제코드 2
+- Thread를 상속받아 1초 단위 타이머 스레드 만들기
+
+```java
+// TimerThread를 사용하는 예제
+public class ThreadTimerEx extends JFrame {
+    public ThreadTimerEx() {
+        setTitle("Thread를 상속받은 타이머 스레드 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // 컨테이너 설정
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+
+        // 타이머 값을 출력할 레이블 생성
+        JLabel timerLabel = new JLabel();
+        timerLabel.setFont(new Font("Gothic", Font.ITALIC, 20));
+        c.add(timerLabel);
+
+        // 타이머 스레드 객체 생성
+        TimerThread th = new TimerThread(timerLabel);
+
+        setSize(250, 150);
+        setVisible(true);
+
+        // 타이머 스레드 시작
+        th.start();
+    }
+
+    public static void main(String[] args) {
+        new ThreadTimerEx();
+    }
+}
+```
+### Runnable 인터페이스로 스레드 만들기
+```java
+// Runnable을 구현하는 새 클래스 작성
+class MyRunnable implements Runnable {
+    // run() 메소드 구현
+    @Override
+    public void run() {
+        // 스레드 코드 작성
+        // 스레드 실행 시작
+        System.out.println("스레드 실행 중");
+
+        // 여기에 스레드가 수행할 작업을 작성합니다.
+        // 예를 들어, 파일을 읽거나 네트워크 요청을 보낼 수 있습니다.
+    }
+}
+```
+![예시 이미지](images/run().png)
+
+```java
+// 스레드 객체 생성 및 시작
+public class ThreadExample {
+    public static void main(String[] args) {
+        // 스레드 객체 생성
+        MyRunnable myRunnable = new MyRunnable();
+
+        // 스레드 시작
+        Thread thread = new Thread(myRunnable);
+        thread.start();
+        
+        // start() 메소드 호출을 통해 스레드가 스케줄되어 JVM에 의해 실행됩니다.
+    }
+}
+```
+
+## Main 스레드
+- main 스레드
+    - JVM이 응용프로그램을 실행할 때 디폴트로 생성되는 스레드
+    - main()메소드
+    - main 메소드가 종료하면 main 쓰레드 종료
+
+![예제 12-3](images/Runnable.webp)
+
+### 쓰레드 종료와 타 쓰레드 강제 종료
+![설명](images/main스레드.webp)
+
+## 스레드 동기화(Thread Synchronization)
+
+### 멀티스레드 프로그램 작성시 주의점
+- 다수의 스레드가 공유 데이터에 동시에 접근하는 경우 공유 데이터의 값에 예상치 못한 결과가 발생할 수 있음.
+
+### 스레드 동기화
+- **동기화란?**
+    - 스레드 사이의 실행 순서를 제어하고 공유 데이터에 대한 접근을 원활하게 하는 기법.
+- 멀티스레드의 공유 데이터의 동시 접근 문제를 해결하기 위한 방법:
+    1. 공유 데이터를 접근하는 모든 스레드를 한 줄로 세우기.
+    2. 한 스레드가 공유 데이터에 대한 작업을 끝낼 때까지 다른 스레드가 대기하도록 함.
+
+### 자바의 스레드 동기화 방법 - 2가지
+1. `synchronized` 키워드로 동기화 블록 지정
+2. `wait()`-`notify()` 메소드로 스레드의 실행 순서를 제어함.
+
+## synchronized 블록 지정
+
+### synchronized 키워드
+- 스레드가 독점적으로 실행해야 하는 부분(동기화 코드)을 표시하는 키워드.
+- 일제 영역(critical section) 표기 키워드.
+
+### synchronized 블록 지정 방법
+- 메소드 전체 혹은 코드 블록을 synchronized 블록으로 지정할 수 있음.
+
+### synchronized 블록이 실행될 때
+- 먼저 실행한 스레드가 모니터 소유.
+    - 모니터: 해당 객체를 독점적으로 사용할 수 있는 권한.
+- 모니터를 소유한 스레드가 모니터를 내놓을 때까지 다른 스레드는 대기해야 함.
+
 # 5월 31일 강의
 
 ## 스윙 컴포넌트의 이해/정의
@@ -371,6 +1029,7 @@ String name = JOptionPane.showInputDialog("이름을 입력하세요");
 static int 30ptionPane.showConfirDialog(Component parentComponent, Object asg, String title, int optionType)
 // parentComponent: ClO DESEN
 ```
+
 # 5월 24일 강의
 
 ## 이벤트 기반 프로그래밍
